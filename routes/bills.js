@@ -56,7 +56,7 @@ const createBill = async (req, res, next) => {
       dueDate: req.body.dueDate,
     };
     bills.push(newBill);
-    fs.writeFileSync(path.join(__dirname, './temp/bills.json'), JSON.stringify(bills));
+    fs.writeFileSync(path.join(__dirname, './tmp/bills.json'), JSON.stringify(bills));
     res.status(201).json(newBill);
   } catch (e) {
     next(e);
