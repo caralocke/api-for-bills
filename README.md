@@ -27,7 +27,7 @@ A small API I'm currently working on for my bill tracker app
     }
 ]
 ```
-#### Users: 
+#### Bills: 
 | Method   | URL                | Description                                                                                            |
 | ------   | --------------     | ------------------------------------------------------------------------------------------------------ |
 | [GET]    | /api/v1/bills      | Returns an array filled with bill objects.                                                             |
