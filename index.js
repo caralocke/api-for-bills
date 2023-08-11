@@ -21,7 +21,7 @@ app.get('/', (req, res) => {
 app.use('/', require(path.join(__dirname, 'routes/bills')));
 
 app.use((req, res, next) => {
-  const err = new Error(`${req.method} ${req.url} Not Found, Cara`);
+  const err = new Error(`${req.method} ${req.url} Not Found`);
   err.status = 404;
   next(err);
 });
