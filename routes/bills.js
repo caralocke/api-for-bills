@@ -137,7 +137,7 @@ const deleteBill = async (req, res, next) => {
       throw err;
     }
     const newBill = bills.map(bill => {
-      if (bill.id === Number(req.params.id)) {
+      if (bill.id === req.params.id) {
         return null;
       } else {
         return bill;
