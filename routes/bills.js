@@ -55,7 +55,18 @@ const createBill = async (req, res, next) => {
       billAmount: req.body.billAmount,
       dueDate: req.body.dueDate,
     };
-    bills.push(newBill);
+    if(!req.body.id){
+      res.send('An id is required');
+    } else if (!req.body.billName) {
+      res.send('A billName is required');
+    } else if (!req.body.billAmount) {
+      res.send('A billAmount is required');
+    } else if (!req.body.dueDate) {
+      res.send('A dueDate is required');
+    } else {
+      bills.push(newBill);
+    }
+    
     fs.writeFileSync(path.join(__dirname, './bills.json'), JSON.stringify(bills));
     res.status(201).json(newBill);
   } catch (e) {
@@ -84,15 +95,26 @@ const updateBill = async (req, res, next) => {
       billAmount: req.body.billAmount,
       dueDate: req.body.dueDate,
     };
-    const newBill = bills.map(bill => {
-      if (bill.id === Number(req.params.id)) {
-        return newBillData;
-      } else {
-        return bill;
-      }
-    });
-    fs.writeFileSync(billsFilePath, JSON.stringify(newBill));
-    res.status(200).json(newBillData);
+    if(!req.body.id){
+      res.send('An id is required');
+    } else if (!req.body.billName) {
+      res.send('A billName is required');
+    } else if (!req.body.billAmount) {
+      res.send('A billAmount is required');
+    } else if (!req.body.dueDate) {
+      res.send('A dueDate is required');
+    } else {
+      const newBill = bills.map(bill => {
+        if (bill.id === Number(req.params.id)) {
+          return newBillData;
+        } else {
+          return bill;
+        }
+      });
+      fs.writeFileSync(billsFilePath, JSON.stringify(newBill));
+      res.status(200).json(newBillData);
+    }
+    
   } catch (e) {
     next(e);
   }
