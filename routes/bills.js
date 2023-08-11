@@ -1,0 +1,138 @@
+const express = require('express');
+const app = express();
+const fs = require('fs');
+const path = require('path');
+
+const router = express.Router();
+const billsFilePath = path.join(__dirname, './bills.json')
+
+const getBills = async (req, res, next) => {
+  try{
+    const data = fs.readFileSync(billsFilePath);
+    const bills = JSON.parse(data);
+    if (!bills) {
+      const err = new Error('No bills found');
+      err.status = 404;
+      throw err;
+    }
+    res.json(bills)
+  } catch (e) {
+    next (e);
+  }
+  
+}
+
+
+router.route('/api/v1/bills').get(getBills)
+
+const getBill = async (req, res, next) => {
+  try {
+    const data = fs.readFileSync(billsFilePath);
+    const bills = JSON.parse(data);
+    const billStats = bills.find(bill => bill.id === Number(req.params.id));
+    if (!billStats) {
+      const err = new Error('No bill found');
+      err.status = 404;
+      throw err;
+    }
+    res.json(billStats);
+  } catch (e) {
+    next(e);
+  }
+};
+
+router.route('/api/v1/bills/:id').get(getBill);
+
+
+const createBill = async (req, res, next) => {
+  try {
+    const data = fs.readFileSync(billsFilePath);
+    const bills = JSON.parse(data);
+    console.log('request.body', req.body)
+    const newBill = {
+      id: req.body.id,
+      billName: req.body.billName,
+      billAmount: req.body.billAmount,
+      dueDate: req.body.dueDate,
+    };
+    bills.push(newBill);
+    fs.writeFileSync(billsFilePath, JSON.stringify(bills));
+    res.status(201).json(newBill);
+  } catch (e) {
+    next(e);
+  }
+};
+  
+router
+  .route('/api/v1/bills')
+  .post(createBill);  
+
+
+const updateBill = async (req, res, next) => {
+  try {
+    const data = fs.readFileSync(billsFilePath);
+    const bills = JSON.parse(data);
+    const billStats = bills.find(bill => bill.id === Number(req.params.id));
+    if (!billStats) {
+      const err = new Error('No bill found');
+      err.status = 404;
+      throw err;
+    }
+    const newBillData = {
+      id: req.body.id,
+      billName: req.body.billName,
+      billAmount: req.body.billAmount,
+      dueDate: req.body.dueDate,
+    };
+    const newBill = bills.map(bill => {
+      if (bill.id === Number(req.params.id)) {
+        return newBillData;
+      } else {
+        return bill;
+      }
+    });
+    fs.writeFileSync(billsFilePath, JSON.stringify(newBill));
+    res.status(200).json(newBillData);
+  } catch (e) {
+    next(e);
+  }
+};
+
+router
+  .route('/api/v1/bills/:id')
+  .get(getBill)
+  .put(updateBill);
+
+
+const deleteBill = async (req, res, next) => {
+  try {
+    const data = fs.readFileSync(billsFilePath);
+    const bills = JSON.parse(data);
+    const billStats = bills.find(bill => bill.id === Number(req.params.id));
+    if (!billStats) {
+      const err = new Error('No bill found');
+      err.status = 404;
+      throw err;
+    }
+    const newBill = bills.map(bill => {
+      if (bill.id === Number(req.params.id)) {
+        return null;
+      } else {
+        return bill;
+      }
+    })
+    .filter(bill => bill !== null);
+    fs.writeFileSync(billsFilePath, JSON.stringify(newBill));
+    res.status(200).end();
+  } catch (e) {
+    next(e);
+  }
+};
+
+router
+  .route('/api/v1/bills/:id')
+  .get(getBill)
+  .put(updateBill)
+  .delete(deleteBill);
+
+module.exports = router;
