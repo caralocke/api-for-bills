@@ -9,6 +9,10 @@ const cors = require('cors');
 const PORT = process.env.PORT || 3020;
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
+const jsonErrorHandler = (err, req, res, next) => {
+  res.status(500).send({ error: err });
+}
+
 app.use(cors({
   origin: "*"
 }))
@@ -18,6 +22,7 @@ app.set('env', NODE_ENV);
 
 app.use(logger('tiny'));
 app.use(bodyParser.json());
+app.use(jsonErrorHandler);
 
 app.get('/', (req, res) => {
   res.status(200);
