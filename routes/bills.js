@@ -47,7 +47,7 @@ router.route('/api/v1/bills/:id').get(getBill);
 const createBill = async (req, res, next) => {
   try {
     const data = fs.readFileSync(billsFilePath);
-    const bills = JSON.parse(data);
+    const bills = data;
     console.log('request.body', req.body)
     const newBill = {
       id: req.body.id,
