@@ -61,9 +61,7 @@ const createBill = async (req, res, next) => {
       res.send('A billAmount is required');
     } else if (!req.body.dueDate) {
       res.send('A dueDate is required');
-    } else if (!req.body.id){
-      res.send('An id is required');
-    }else {
+    } else {
       bills.push(newBill);
     }
     
