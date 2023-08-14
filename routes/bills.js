@@ -56,7 +56,7 @@ const createBill = async (req, res, next) => {
       dueDate: req.body.dueDate,
     };
     if(!req.body.id){
-      res.send('An id is required');
+      res.send(JSON.stringify('An id is required'));
     } else if (!req.body.billName) {
       res.send('A billName is required');
     } else if (!req.body.billAmount) {
