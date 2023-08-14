@@ -49,12 +49,12 @@ const createBill = async (req, res, next) => {
     const data = fs.readFileSync(billsFilePath);
     const bills = JSON.parse(data);
     console.log('request.body', req.body)
-    const newBill = JSON.parse({
+    const newBill = {
       id: req.body.id,
       billName: req.body.billName,
       billAmount: req.body.billAmount,
       dueDate: req.body.dueDate,
-    });
+    };
     if(!req.body.id){
       res.send('An id is required');
     } else if (!req.body.billName) {
