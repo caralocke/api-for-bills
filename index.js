@@ -4,9 +4,16 @@ const expressValidator = require('express-validator');
 const logger = require('morgan');
 const path = require('path');
 const app = express();
+const cors = require('cors');
 
 const PORT = process.env.PORT || 3020;
 const NODE_ENV = process.env.NODE_ENV || 'development';
+
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true,
+  optionsSuccessStatus: 200,
+}))
 
 app.set('port', PORT);
 app.set('env', NODE_ENV);
