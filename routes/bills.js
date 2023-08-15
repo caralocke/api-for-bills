@@ -47,7 +47,8 @@ router.route('/api/v1/bills/:id').get(getBill);
 const createBill = async (req, res, next) => {
   try {
     const data = fs.readFileSync(billsFilePath);
-    const bills = data;
+    const bills = JSON.parse(data);
+    console.log('createBill bills', bills)
     console.log('request.body', req.body)
     const newBill = {
       id: req.body.id,
@@ -70,7 +71,7 @@ const createBill = async (req, res, next) => {
     fs.writeFileSync(path.join(__dirname, './bills.json'), JSON.stringify(bills));
     res.status(201).json(newBill);
   } catch (e) {
-    next(e);
+    console.log('error', e);
   }
 };
   
