@@ -84,6 +84,7 @@ const updateBill = async (req, res, next) => {
     const data = fs.readFileSync(billsFilePath);
     const bills = JSON.parse(data);
     const billStats = bills.find(bill => bill.id === Number(req.params.id));
+    console.log('req.params', req.params)
     if (!billStats) {
       const err = new Error('No bill found');
       err.status = 404;
@@ -130,6 +131,7 @@ const deleteBill = async (req, res, next) => {
   try {
     const data = fs.readFileSync(billsFilePath);
     const bills = JSON.parse(data);
+    console.log('req.params.id', req.params.id)
     const billStats = bills.find(bill => bill.id === Number(req.params.id));
     if (!billStats) {
       const err = new Error('No bill found');
@@ -137,13 +139,16 @@ const deleteBill = async (req, res, next) => {
       throw err;
     }
     const newBill = bills.map(bill => {
-      if (bill.id === req.params.id) {
+      if (bill.id === billStats.id) {
         return null;
       } else {
+        console.log('bill inside newBill', bill)
+        console.log('billstats', billStats)
         return bill;
       }
     })
     .filter(bill => bill !== null);
+    console.log('server bills', bills)
     fs.writeFileSync(billsFilePath, JSON.stringify(newBill));
     res.status(200).end();
   } catch (e) {
