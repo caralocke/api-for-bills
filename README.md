@@ -1,7 +1,7 @@
 # API-FOR-BILLS
 A small API I'm currently working on for my bill tracker app
 
-## API url: https://api-for-bills.onrender.com
+## API url: https://apiforbills.fly.dev/
 
 ### Bills:
 [GET] /api/v1/bills returns an array ("bills") filled with objects (each a "bill"):
