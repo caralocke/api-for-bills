@@ -1,9 +1,11 @@
 const express = require('express');
+const app = express();
+const AWS = require('aws-sdk');
+const s3 = new AWS.S3();
 var bodyParser = require('body-parser');
 const expressValidator = require('express-validator');
 const logger = require('morgan');
 const path = require('path');
-const app = express();
 const cors = require('cors');
 
 const PORT = process.env.PORT || 3000;
@@ -11,7 +13,9 @@ const NODE_ENV = process.env.NODE_ENV || 'development';
 
 const jsonErrorHandler = (err, req, res, next) => {
   res.status(500).send({ error: err });
-}
+};
+
+
 
 app.use(cors({
   origin: "*"
