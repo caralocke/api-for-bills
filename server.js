@@ -1,7 +1,5 @@
 const express = require('express');
 const app = express();
-const AWS = require('aws-sdk');
-const s3 = new AWS.S3();
 var bodyParser = require('body-parser');
 const expressValidator = require('express-validator');
 const logger = require('morgan');
