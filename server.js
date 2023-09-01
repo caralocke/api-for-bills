@@ -6,7 +6,7 @@ const logger = require('morgan');
 const path = require('path');
 const cors = require('cors');
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3020;
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
 const jsonErrorHandler = (err, req, res, next) => {
@@ -32,6 +32,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/', require(path.join(__dirname, 'routes/bills')));
+app.use('/', require(path.join(__dirname, 'routes/events')));
 
 app.use((req, res, next) => {
   const err = new Error(`${req.method} ${req.url} Not Found`);

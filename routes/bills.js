@@ -48,22 +48,25 @@ const createBill = async (req, res, next) => {
   try {
     const data = fs.readFileSync(billsFilePath);
     const bills = JSON.parse(data);
-    console.log('createBill bills', bills)
-    console.log('request.body', req.body)
+    console.log('req.body', req.body)
+    const { id, bill_name, bill_amount, due_date } = req.body
     const newBill = {
-      id: req.body.id,
-      billName: req.body.billName,
-      billAmount: req.body.billAmount,
-      dueDate: req.body.dueDate,
+      id,
+      bill_name,
+      bill_amount,
+      start: due_date,
+      end: due_date,
+      title: `${bill_name}: $${bill_amount}`,
+      hex_color: '00FFFF'
     };
     if(!req.body.id){
-      res.send('An id is required');
-    } else if (!req.body.billName) {
-      res.send('A billName is required');
-    } else if (!req.body.billAmount) {
-      res.send('A billAmount is required');
-    } else if (!req.body.dueDate) {
-      res.send('A dueDate is required');
+      res.send(JSON.stringify('An id is required'));
+    } else if (!req.body.bill_name) {
+      res.send(JSON.stringify('A bill_name is required'));
+    } else if (!req.body.bill_amount) {
+      res.send(JSON.stringify('A bill_amount is required'));
+    } else if (!req.body.due_date) {
+      res.send(JSON.stringify('A due_date is required'));
     } else {
       bills.push(newBill);
     }
@@ -85,7 +88,6 @@ const updateBill = async (req, res, next) => {
     const data = fs.readFileSync(billsFilePath);
     const bills = JSON.parse(data);
     const billStats = bills.find(bill => bill.id === Number(req.params.id));
-    console.log('req.params', req.params)
     if (!billStats) {
       const err = new Error('No bill found');
       err.status = 404;
@@ -132,7 +134,6 @@ const deleteBill = async (req, res, next) => {
   try {
     const data = fs.readFileSync(billsFilePath);
     const bills = JSON.parse(data);
-    console.log('req.params.id', req.params.id)
     const billStats = bills.find(bill => bill.id === Number(req.params.id));
     if (!billStats) {
       const err = new Error('No bill found');
@@ -143,13 +144,10 @@ const deleteBill = async (req, res, next) => {
       if (bill.id === billStats.id) {
         return null;
       } else {
-        console.log('bill inside newBill', bill)
-        console.log('billstats', billStats)
         return bill;
       }
     })
     .filter(bill => bill !== null);
-    console.log('server bills', bills)
     fs.writeFileSync(billsFilePath, JSON.stringify(newBill));
     res.status(200).end();
   } catch (e) {
