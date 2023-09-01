@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 
 const router = express.Router();
-const billsFilePath = path.join(__dirname, './bills.json')
+const billsFilePath = path.join(__dirname, '../data/bills.json')
 
 const getBills = async (req, res, next) => {
   try{
@@ -19,8 +19,7 @@ const getBills = async (req, res, next) => {
   } catch (e) {
     next (e);
   }
-  
-}
+};
 
 
 router.route('/api/v1/bills').get(getBills)
@@ -54,11 +53,12 @@ const createBill = async (req, res, next) => {
       id,
       bill_name,
       bill_amount,
-      start: due_date,
-      end: due_date,
+      start: new Date(due_date).setHours(9),
+      end: new Date(due_date).setHours(10),
       title: `${bill_name}: $${bill_amount}`,
       hex_color: '00FFFF'
     };
+    console.log('newBill', newBill)
     if(!req.body.id){
       res.send(JSON.stringify('An id is required'));
     } else if (!req.body.bill_name) {
@@ -71,7 +71,7 @@ const createBill = async (req, res, next) => {
       bills.push(newBill);
     }
     
-    fs.writeFileSync(path.join(__dirname, './bills.json'), JSON.stringify(bills));
+    fs.writeFileSync(path.join(__dirname, '../data/bills.json'), JSON.stringify(bills));
     res.status(201).json(newBill);
   } catch (e) {
     console.log('error', e);
