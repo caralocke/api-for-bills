@@ -93,19 +93,23 @@ const updateBill = async (req, res, next) => {
       err.status = 404;
       throw err;
     }
+    const { id, bill_name, bill_amount, due_date } = req.body
     const newBillData = {
-      id: req.body.id,
-      billName: req.body.billName,
-      billAmount: req.body.billAmount,
-      dueDate: req.body.dueDate,
+      id,
+      bill_name,
+      bill_amount,
+      start: new Date(due_date).setHours(9),
+      end: new Date(due_date).setHours(10),
+      title: `${bill_name}: $${bill_amount}`,
+      hex_color: '00FFFF'
     };
     if(!req.body.id){
       res.send('An id is required');
-    } else if (!req.body.billName) {
+    } else if (!req.body.bill_name) {
       res.send('A billName is required');
-    } else if (!req.body.billAmount) {
+    } else if (!req.body.bill_amount) {
       res.send('A billAmount is required');
-    } else if (!req.body.dueDate) {
+    } else if (!req.body.due_date) {
       res.send('A dueDate is required');
     } else {
       const newBill = bills.map(bill => {
@@ -149,7 +153,7 @@ const deleteBill = async (req, res, next) => {
     })
     .filter(bill => bill !== null);
     fs.writeFileSync(billsFilePath, JSON.stringify(newBill));
-    res.status(200).end();
+    res.status(200).json(billStats).end();
   } catch (e) {
     next(e);
   }
