@@ -47,18 +47,17 @@ const createBill = async (req, res, next) => {
   try {
     const data = fs.readFileSync(billsFilePath);
     const bills = JSON.parse(data);
-    console.log('req.body', req.body)
     const { id, bill_name, bill_amount, due_date } = req.body
     const newBill = {
       id,
       bill_name,
       bill_amount,
-      start: new Date(due_date).setHours(9),
-      end: new Date(due_date).setHours(10),
+      due_date,
+      start: due_date,
+      end: due_date,
       title: `${bill_name}: $${bill_amount}`,
       hex_color: '00FFFF'
     };
-    console.log('newBill', newBill)
     if(!req.body.id){
       res.send(JSON.stringify('An id is required'));
     } else if (!req.body.bill_name) {
@@ -93,23 +92,22 @@ const updateBill = async (req, res, next) => {
       err.status = 404;
       throw err;
     }
-    const { id, bill_name, bill_amount, due_date } = req.body
+    const { id, bill_name, bill_amount, due_date } = JSON.parse(req.body.body)
     const newBillData = {
       id,
       bill_name,
       bill_amount,
-      start: new Date(due_date).setHours(9),
-      end: new Date(due_date).setHours(10),
+      due_date,
+      start: due_date,
+      end: due_date,
       title: `${bill_name}: $${bill_amount}`,
       hex_color: '00FFFF'
     };
-    if(!req.body.id){
-      res.send('An id is required');
-    } else if (!req.body.bill_name) {
+     if (!newBillData.bill_name) {
       res.send('A billName is required');
-    } else if (!req.body.bill_amount) {
+    } else if (!newBillData.bill_amount) {
       res.send('A billAmount is required');
-    } else if (!req.body.due_date) {
+    } else if (!newBillData.due_date) {
       res.send('A dueDate is required');
     } else {
       const newBill = bills.map(bill => {
@@ -121,8 +119,8 @@ const updateBill = async (req, res, next) => {
       });
       fs.writeFileSync(billsFilePath, JSON.stringify(newBill));
       res.status(200).json(newBillData);
-    }
     
+    }
   } catch (e) {
     next(e);
   }
