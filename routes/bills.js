@@ -92,7 +92,7 @@ const updateBill = async (req, res, next) => {
       err.status = 404;
       throw err;
     }
-    const { id, bill_name, bill_amount, due_date } = JSON.parse(req.body.body)
+    const { id, bill_name, bill_amount, due_date } = req.body
     const newBillData = {
       id,
       bill_name,
